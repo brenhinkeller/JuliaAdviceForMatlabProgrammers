@@ -2,13 +2,13 @@
 
 Here are a few things I've learned while transitioning from MATLAB to [Julia](julialang.org) over the past two years or so, some of which may be obvious and some of which is probably less so:
 
-###At the REPL:
+### At the REPL:
 * Typing `?` followed by a function name will give you help/documentation on that function
 * Typing `]` opens the package manager
 * Typing `;` gives you the system command line
 * Typing `@less` followed by a function call will show you the source code for that function
 
-###Common "gotcha"s:
+### Common "gotcha"s:
 * if `A` is an array, assigning `B = A` will copy`A` *by reference* such that both `A` and `B` point to the same memory,  i.e., if you subsequently change `A[1]`, that'll also change `B[1]`. If you don't want this, you need to make a copy, e.g. `B = copy(A)`.
 * Slicing an array by indexing, with (e.g.)  `x = a[:, 5]` or `a = x[x .> 5]`, etc., makes a copy. This is great if you *want* a brand new array, but can be slow if you don't. In the latter case, you can instead use a `view`, e.g. `view(a, :, 5)`, which will be much much faster where applicable. You can turn array-style indexing into a view with the `@views` macro (`@views a[:, 5]` equals `view(a, :, 5)`).
 * For timing things (in the context of optimizing performance), you generally want to use `@btime` (from BenchmarkTools.jl), not `@time`, and unless you're timing something that will always be called in global scope you probably want to "interpolate" any global variables into the `@btime` macro with `$`  (e.x. `@btime somefunction($some_array)`)
