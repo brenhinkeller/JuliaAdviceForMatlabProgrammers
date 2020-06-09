@@ -9,11 +9,14 @@ Here are a few things I've learned while transitioning from MATLAB to [Julia](ju
 * Typing `@less` followed by a function call will show you the source code for that function
 
 #### Common 'gotcha's:
-* if `A` is an array, assigning `B = A` will copy`A` *by reference* such that both `A` and `B` point to the same memory,  i.e., if you subsequently change `A[1]`, that'll also change `B[1]`. If you don't want this, you need to make a copy, e.g. `B = copy(A)`.
-* Slicing an array by indexing, with (e.g.)  `x = a[:, 5]` or `a = x[x .> 5]`, etc., makes a copy. This is great if you *want* a brand new array, but can be slow if you don't. In the latter case, you can instead use a [`view`](https://docs.julialang.org/en/latest/base/arrays/#Base.view), e.g. `view(a, :, 5)`, which will be much much faster where applicable. You can turn array-style indexing into a view with the `@views` macro (`@views a[:, 5]` equals `view(a, :, 5)`).
-* For element-wise operations you put a dot on _every_ function,  (e.g.  `f.(x)` is different than`f(x)`). This is known as **dot-broadcasting**, and can be done for just about any function or operator.
+* if `A` is an array, **assigning** `B = A` will copy`A` *by reference* such that both `A` and `B` point to the same memory,  i.e., if you subsequently change `A[1]`, that'll also change `B[1]`. If you don't want this, you need to make a copy, e.g. `B = copy(A)`.
+* Slicing an array by **indexing**, with (e.g.)  `x = a[:, 5]` or `a = x[x .> 5]`, etc., *makes a copy*. This is great if you *want* a brand new array, but can be slow if you don't. In the latter case, you can instead use a [`view`](https://docs.julialang.org/en/latest/base/arrays/#Base.view), e.g. `view(a, :, 5)`, which will be much much faster where applicable. 
+  * You can turn array-style indexing into a view with the `@views` macro (`@views a[:, 5]` equals `view(a, :, 5)`).
+* For **element-wise** operations on an array, you put a dot on _every_ function/operator (not just a some, as in Matlab). 
+  * This includes functions you call with `()`. For example, `f.(x)` is different than `f(x)`.
+  * This known as **dot-broadcasting**, and can be done for just about any function or operator. 
 * Extending the above, `.=` is different than `=`. To use  `.=` the variable on the left of the assignment must already exist and be the right size. If it does though, `.=` will be much more efficient than `=` since it will fill the already-existing array rather than allocating a new one. 
-  * If you don't want to write all the dots, you can use the `@.` macro. `@. r  = a * b + sin(c)` is equivalent to `r .= a .* b .+ sin.(c)`. In either case, if you have "dot-broadcasting" for every operation in a line the whole operation will get "fused" with sometimes-significant performance gains.
+  * If you don't want to write all the dots, you can use the `@.` macro. `@. r  = a * b + sin(c)` is equivalent to `r .= a .* b .+ sin.(c)`. In either case, if you have "dot-broadcasting" for every operation in a line the whole thing will get "fused" with sometimes-significant performance gains.
 * For **timing** things (in the context of optimizing performance), you generally want to use `@btime` (from [BenchmarkTools.jl](https://github.com/JuliaCI/BenchmarkTools.jl)), not `@time`, and unless you're timing something that will always be called in global scope you probably want to "interpolate" any global variables into the `@btime` macro with `$`  (e.x. `@btime somefunction($some_array)`)
 
 #### Performance:
