@@ -1,6 +1,6 @@
 # Julia Advice for MATLAB (or R or Python) programmers
 
-Here are a few things I've learned while transitioning from a mix of MATLAB and C to [Julia](julialang.org) starting around 2018 -- some of which may be obvious and some of which is probably less so:
+Here are a few things I've learned while transitioning from a mix of MATLAB and C to the [Julia](julialang.org) programming langage, starting around 2018. Some of this is rather straightforward, while other points may be less obvious:
 
 #### At the REPL:
 * Typing `?` followed by a function name will give you help/documentation on that function
