@@ -6,7 +6,7 @@ Here are a few things I've learned while transitioning from a mix of MATLAB and 
 * Typing `?` followed by a function name will give you help/documentation on that function
 * Typing `]` opens the package manager
 * Typing `;` gives you the system command line
-* Typing `@less` followed by a function call will show you the source code for that function
+* Typing `@less` or `@edit` followed by a function call will show you the source code for that function
 
 #### Common 'gotcha's:
 (see also: https://docs.julialang.org/en/v1.5/manual/noteworthy-differences/)
