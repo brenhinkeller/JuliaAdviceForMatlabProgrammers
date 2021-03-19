@@ -5,7 +5,7 @@ Here are a few things I've learned while transitioning from a mix of MATLAB and 
 #### The very basics:
 At the REPL,
 * Typing `?` followed by the name of a function (or type, etc.) name will give you help/documentation on that function (or type, etc.).
-  * This documentation is usually quite good, but you have to know the exact name of the thing you need. If you don't know that, try the `apropos` function to find the exact names of a few relevant things.
+  * This documentation is usually quite good, but you have to know the exact name of the thing you need. If you don't know that, try the `apropos` function to find the exact names of a few relevant things (try, for example `apropos("sparse array")`).
 * Typing `]` opens the package manager
 * Typing `;` gives you the system command line
 * Typing `@less` or `@edit` followed by a function call will show you the source code for that function
