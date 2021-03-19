@@ -10,8 +10,12 @@ At the REPL,
 * Typing `;` gives you the system command line
 * Typing `@less` or `@edit` followed by a function call will show you the source code for that function
 
+#### Some quick-start guides/cheatsheets:
+* A handy Matlab-Python-Julia rosetta stone: https://cheatsheets.quantecon.org/
+* The ["Noteworthy Differences from other Languages" section](https://docs.julialang.org/en/v1.5/manual/noteworthy-differences/) of the official Julia docs
+* "The fast track to Julia": https://juliadocs.github.io/Julia-Cheat-Sheet/
+
 #### Common 'gotcha's:
-(see also: https://docs.julialang.org/en/v1.5/manual/noteworthy-differences/)
 * if `A` is an array, **assigning** `B = A` will copy`A` *by reference* such that both `A` and `B` point to the same memory,  i.e., if you subsequently change `A[1]`, that'll also change `B[1]`. If you don't want this, you need to make a copy, e.g. `B = copy(A)`.
 * Slicing an array by **indexing**, with (e.g.)  `x = a[:, 5]` or `a = x[x .> 5]`, etc., *makes a copy*. This is great if you *want* a brand new array, but can be slow if you don't. In the latter case, you can instead use a [`view`](https://docs.julialang.org/en/latest/base/arrays/#Base.view), e.g. `view(a, :, 5)`, which will be much much faster where applicable. 
   * You can turn array-style indexing into a view with the `@views` macro (`@views a[:, 5]` equals `view(a, :, 5)`).
