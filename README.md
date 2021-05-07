@@ -6,6 +6,8 @@ The short, narrative, version is that a [multiple dispatch](https://en.wikipedia
 
 
 #### The very basics:
+There are many different ways of using Julia -- in an IDE (e.g. [Juno](https://junolab.org) or [Julia for VSCode](https://www.julia-vscode.org)), in a Jupyter notebook via [IJulia](https://github.com/JuliaLang/IJulia.jl), in a [Pluto notebook](https://plutojl.org), integrated with a command-line editor like Vim or Emacs, or just directly in the terminal. In any case though, you will likely end up interacting with a Julia REPL, where you can type in Julia code and get results back.
+
 At the REPL,
 * Typing `?` followed by the name of a function (or type, etc.) name will give you help/documentation on that function (or type, etc.).
   * This documentation is usually quite good, but you have to know the exact name of the thing you need. If you don't know that, try the `apropos` function to find the exact names of a few relevant things (try, for example `apropos("sparse array")`). You can also access these suggestions by entering a string rather than raw text at the `?` prompt.
