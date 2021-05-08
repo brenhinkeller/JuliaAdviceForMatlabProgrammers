@@ -14,8 +14,7 @@ There are many different ways of using Julia -- in an IDE (e.g. [Juno](https://j
 * Typing `]` opens the package manager
 * Typing `;` gives you the system command line
 * Typing `@less` or `@edit` followed by a function call will show you the source code for that function
-
-_(for more advanced REPL tips and tricks, see [this video](https://www.youtube.com/watch?v=EkgCENBFrAY))_
+* for more advanced REPL tips and tricks, see [this video](https://www.youtube.com/watch?v=EkgCENBFrAY))
 
 #### Some quick-start guides/cheatsheets:
 * A handy Matlab-Python-Julia rosetta stone: https://cheatsheets.quantecon.org/
