@@ -54,7 +54,7 @@ There are many different ways of using Julia -- in an IDE (e.g. [Juno](https://j
   * You can [LoopVectorization.jl](https://github.com/chriselrod/LoopVectorization.jl) either on a loop with `@avx for`, or on a dot-broadcasted operation with `@avx  @.` You can only use this in cases where the iterations of the loop can be conducted in arbitrary order, since the vector registers will be running the same operations on several iterations of your loop at the same time.
   * See also [`@simd`](https://docs.julialang.org/en/v1.5/base/base/index.html#Base.SimdLoop.@simd)
 
-* To **_follow the compilation pipeline_** and see how your Julia code is being translated into intermediate representations, and finally machine code, you can use several handy macros. This is something you may not be used to being able to do coming in other languages, but it can be quite instructive when trying to understand and optimize your code!
+* To **_follow the compilation pipeline_** and see how your Julia code is being translated into intermediate representations, and finally machine code, you can use several handy macros. This is something you may not be used to being able to do from Matlab or Python, but it can be quite instructive when trying to understand and optimize your code!
   * `@code_lowered` -- Prints Julia SSA-form IR
   ![Image of code_lowered example](img/code_lowered.png)
   In order to add `1` (an integer) and `1.0` (a floating point number), Julia must first promote the two to a consistent type. This is what the call to `Base.promote_type` does. Then we add (in a slightly funny way), and return the result. To see why we add this way, let's look one step deeper
@@ -74,6 +74,6 @@ There are many different ways of using Julia -- in an IDE (e.g. [Juno](https://j
   ![Image of code_native example](img/code_native.png)
   There's a bunch of greyed-out contextual information here again, but the important parts -- this time native x86 instructions which can actually run on our CPU -- are highlighed again. The first one `vcvtsi2sd` is a bit of a mouthful, but this is our integer-to-float conversion again. Then we have `vaddsd`, which is going to "Vectorized ADD Scalar Double-precision floating-point values" from registers `xmm0` and `xmm1`, and store the results in register `xmm0`. Then `retq` to return control, and `nopw` (a no-op), which is just padding for alignmnent.
 
-  One thing you might notice, if you're used to reading x86 assembly, from the `v` in front of the instructions, and the `x` in the register names, is that this is vectorized code. This isn't doing much for us in this case since we're only adding one pair of numbers, but this is a hint that we could actually add several numbers at once with only a single one of these `vadd` instructions, e.g.:
+    One thing you might notice, if you're used to reading x86 assembly, from the `v` in front of the instructions, and the `x` in the register names, is that this is vectorized code. This isn't doing much for us in this case since we're only adding one pair of numbers, but this is a hint that we could actually add several numbers at once with only a single one of these `vadd` instructions, e.g.:
   ![Image of code_native tuple example](img/code_native_tuple.png)
-  Julia's compilation pipleine isn't bad at vectorizing things like this, but won't catch everything -- and for everything else there's LoopVectorization.jl.
+  Julia's compilation pipleine isn't bad at vectorizing things like this, but won't catch everything; and for everything else there's LoopVectorization.jl.
