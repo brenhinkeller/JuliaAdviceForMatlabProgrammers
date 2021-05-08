@@ -51,57 +51,14 @@ There are many different ways of using Julia -- in an IDE (e.g. [Juno](https://j
   ![Image of code_lowered example](img/code_lowered.png)
   
   * `@code_warntype` -- like `@code_lowered`, but also shows type-inference information
+  ![Image of code_warntype example](img/code_warntype.png)
 
-  ```julia
-  julia> @code_warntype 1 + 1.0
-  Variables
-    #self#::Core.Const(+)
-    x::Int64
-    y::Float64
-    
-  Body::Float64
-  1 ─ %1 = Base.promote(x, y)::Tuple{Float64, Float64}
-  │   %2 = Core._apply_iterate(Base.iterate, Base.:+, %1)::Float64
-  └──      return %2
-  ```
   * `@code_llvm`  --   Prints LLVM bitcode
+  ![Image of code_llvm example](img/code_llvm.png)
 
-  ```julia
-  julia> @code_llvm 1 + 1.0
-  ;  @ promotion.jl:321 within `+'
-  define double @"julia_+_455"(i64 signext %0, double %1) {
-  top:
-  ; ┌ @ promotion.jl:292 within `promote'
-  ; │┌ @ promotion.jl:269 within `_promote'
-  ; ││┌ @ number.jl:7 within `convert'
-  ; │││┌ @ float.jl:94 within `Float64'
-      %2 = sitofp i64 %0 to double
-  ; └└└└
-  ;  @ promotion.jl:321 within `+' @ float.jl:326
-      %3 = fadd double %2, %1
-  ;  @ promotion.jl:321 within `+'
-  ret double %3
-  }
-  ```
   * `@code_native` --  Prints native assembly code
+  ![Image of code_native example](img/code_native.png)
 
-  ```julia
-  julia> @code_native 1 + 1.0
-	.section	__TEXT,__text,regular,pure_instructions
-  ; ┌ @ promotion.jl:321 within `+'
-  ; │┌ @ promotion.jl:292 within `promote'
-  ; ││┌ @ promotion.jl:269 within `_promote'
-  ; │││┌ @ number.jl:7 within `convert'
-  ; ││││┌ @ float.jl:94 within `Float64'
-        vcvtsi2sd	%rdi, %xmm1, %xmm1
-  ; │└└└└
-  ; │ @ promotion.jl:321 within `+' @ float.jl:326
-        vaddsd  	%xmm0, %xmm1, %xmm0
-  ; │ @ promotion.jl:321 within `+'
-	retq
-	nopw	(%rax,%rax)
-  ; └
-  ```
 
 ## Other tips:
 * In Julia, you generally don't use `printf`. Instead you can interpolate variables into strings with `$` and use plain old `print` (or `println`), ex: "The values varied from $x to $y"
