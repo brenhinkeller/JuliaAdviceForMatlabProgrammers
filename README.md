@@ -48,16 +48,16 @@ There are many different ways of using Julia -- in an IDE (e.g. [Juno](https://j
 
 * To **_follow the compilation pipeline_** and see how your Julia code is being translated into intermediate representations, and finally machine code, you can use (e.g., here for the trivial example of `1+1`)
   * `@code_lowered` -- Prints Julia SSA-form IR
-  ![Image of code_lowered example](img/code_lowered.png | width=200)
+  ![Image of code_lowered example](img/code_lowered.png)
   
   * `@code_warntype` -- like `@code_lowered`, but also shows type-inference information
-  ![Image of code_warntype example](img/code_warntype.png | width=200)
+  ![Image of code_warntype example](img/code_warntype.png)
 
   * `@code_llvm`  --   Prints LLVM bitcode
-  ![Image of code_llvm example](img/code_llvm.png | width=200)
+  ![Image of code_llvm example](img/code_llvm.png)
 
   * `@code_native` --  Prints native assembly code
-  ![Image of code_native example](img/code_native.png | width=200)
+  ![Image of code_native example](img/code_native.png)
 
 
 ## Other tips:
