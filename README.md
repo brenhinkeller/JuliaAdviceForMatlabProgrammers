@@ -54,12 +54,14 @@ There are many different ways of using Julia -- in an IDE (e.g. [Juno](https://j
   * You can [LoopVectorization.jl](https://github.com/chriselrod/LoopVectorization.jl) either on a loop with `@avx for`, or on a dot-broadcasted operation with `@avx  @.` You can only use this in cases where the iterations of the loop can be conducted in arbitrary order, since the vector registers will be running the same operations on several iterations of your loop at the same time. 
   * See also [`@simd`](https://docs.julialang.org/en/v1.5/base/base/index.html#Base.SimdLoop.@simd)
 
-* To **_follow the compilation pipeline_** and see how your Julia code is being translated into intermediate representations, and finally machine code, you can use (e.g., here for the trivial example of `1+1`)
+* To **_follow the compilation pipeline_** and see how your Julia code is being translated into intermediate representations, and finally machine code, you can use 
   * `@code_lowered` -- Prints Julia SSA-form IR
   ![Image of code_lowered example](img/code_lowered.png)
+  In order to add `1` (an integer) and `1.0` (a floating point number), Julia must first promote the two to a consistent type. This is what the call to `Base.promote_type` does. Then we add (in a slightly funny way), and return the result. To see why we add this way, let's look one step deeper
   
   * `@code_warntype` -- like `@code_lowered`, but also shows type-inference information
   ![Image of code_warntype example](img/code_warntype.png)
+  Ok, so now we can see they types of everything as well, in the colored type annotations beginning with `::`. The inputs are `x` which we are told is an `Int64`, (evidently our `1`), and `y` which is a `Float64` (our `1.0`). After applying `Base.promote_type`, the result is a tuple of two `Float64`s, in this case `(1.0, 1.0)`. Tuples are arguably one of the most fundamental constructs in Julia (thanks to its lisp-y heritage), and have lots of nice properties. Among other things, they're iterable, so the natural way to add up the contents of one is by iterating.
 
   * `@code_llvm`  --   Prints LLVM bitcode
   ![Image of code_llvm example](img/code_llvm.png)
