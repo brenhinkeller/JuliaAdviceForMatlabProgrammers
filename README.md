@@ -6,7 +6,7 @@ The short, narrative, version is that a [multiple dispatch](https://en.wikipedia
 
 
 #### The very basics:
-There are many different ways of using Julia -- in an IDE (e.g. [Juno](https://junolab.org) or [Julia for VSCode](https://www.julia-vscode.org)), in a Jupyter notebook via [IJulia](https://github.com/JuliaLang/IJulia.jl), in a [Pluto notebook](https://plutojl.org), integrated with a command-line editor like Vim or Emacs, or just directly in the terminal. In any case though, you will likely end up interacting with a Julia REPL, where you can type in Julia code and get results back.
+There are many different ways of using Julia -- in an IDE (e.g. [Juno](https://junolab.org) or [Julia for VSCode](https://www.julia-vscode.org)), in a Jupyter notebook via [IJulia](https://github.com/JuliaLang/IJulia.jl), in a [Pluto notebook](https://plutojl.org), integrated with a command-line editor like Vim or Emacs, or just directly in the terminal. In any case though, you will likely end up interacting with a Julia *REPL*, where you can type in Julia code and get results back.
 
 At the REPL,
 * Typing `?` followed by the name of a function (or type, etc.) name will give you help/documentation on that function (or type, etc.).
@@ -14,6 +14,7 @@ At the REPL,
 * Typing `]` opens the package manager
 * Typing `;` gives you the system command line
 * Typing `@less` or `@edit` followed by a function call will show you the source code for that function
+_(for more advanced REPL tips and tricks, see [this video](https://www.youtube.com/watch?v=EkgCENBFrAY))_
 
 #### Some quick-start guides/cheatsheets:
 * A handy Matlab-Python-Julia rosetta stone: https://cheatsheets.quantecon.org/
