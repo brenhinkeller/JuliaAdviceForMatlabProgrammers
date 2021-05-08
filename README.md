@@ -47,7 +47,8 @@ There are many different ways of using Julia -- in an IDE (e.g. [Juno](https://j
   * See also [`@simd`](https://docs.julialang.org/en/v1.5/base/base/index.html#Base.SimdLoop.@simd)
 
 * To **_follow the compilation pipeline_** and see how your Julia code is being translated into intermediate representations, and finally machine code, you can use (e.g., here for the trivial example of `1+1`)
-  * `@code_lowered`  Prints Julia SSA-form IR
+  * `@code_lowered` -- Prints Julia SSA-form IR
+
   ```julia
   julia> @code_lowered 1 + 1.0
   CodeInfo(1 ─ %1 = Base.promote(x, y)
@@ -55,7 +56,8 @@ There are many different ways of using Julia -- in an IDE (e.g. [Juno](https://j
   └──      return %2
   )
   ```
-  * `@code_warntype` like `@code_lowered`, but also shows type-inference information
+  * `@code_warntype` -- like `@code_lowered`, but also shows type-inference information
+
   ```julia
   julia> @code_warntype 1 + 1.0
   Variables
@@ -68,7 +70,8 @@ There are many different ways of using Julia -- in an IDE (e.g. [Juno](https://j
   │   %2 = Core._apply_iterate(Base.iterate, Base.:+, %1)::Float64
   └──      return %2
   ```
-  * `@code_llvm`     Prints LLVM bitcode
+  * `@code_llvm`  --   Prints LLVM bitcode
+
   ```julia
   julia> @code_llvm 1 + 1.0
   ;  @ promotion.jl:321 within `+'
@@ -86,7 +89,8 @@ There are many different ways of using Julia -- in an IDE (e.g. [Juno](https://j
   ret double %3
   }
   ```
-  * `@code_native`   Prints native assembly code
+  * `@code_native` --  Prints native assembly code
+
   ```julia
   julia> @code_native 1 + 1.0
 	.section	__TEXT,__text,regular,pure_instructions
