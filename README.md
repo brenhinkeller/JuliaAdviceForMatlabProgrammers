@@ -66,7 +66,7 @@ There are many different ways of using Julia -- in an IDE (e.g. [Juno](https://j
   * `@code_llvm`  --   Prints LLVM bitcode
   ![Image of code_llvm example](img/code_llvm.png)
   The next step in Julia's compilation pipeline is to turn everything into [LLVM](https://en.wikipedia.org/wiki/Llvm) bitcode. As the LLVM project will [tell you](https://llvm.org/docs/BitCodeFormat.html) 
-  > What is commonly known as the LLVM bitcode file format (also, sometimes anachronistically known as bytecode) is actually two things: a bitstream container format and an encoding of LLVM IR into the container format.
+    > What is commonly known as the LLVM bitcode file format (also, sometimes anachronistically known as bytecode) is actually two things: a bitstream container format and an encoding of LLVM IR into the container format.
   
   but for our purposes these are just instructions that LLVM will use to generate the final optimized machine code. There are three instructions here: first `sitofp`, which as the "i to f" part might tell you, is going to convert an integer to a floating point number. Then, `fadd`, which will add two floating point numbers, and finally we'll `ret`urn the result.
 
