@@ -46,6 +46,12 @@ There are many different ways of using Julia -- in an IDE (e.g. [Juno](https://j
   * You can [LoopVectorization.jl](https://github.com/chriselrod/LoopVectorization.jl) either on a loop with `@avx for`, or on a dot-broadcasted operation with `@avx  @.` You can only use this in cases where the iterations of the loop can be conducted in arbitrary order, since the vector registers will be running the same operations on several iterations of your loop at the same time. 
   * See also [`@simd`](https://docs.julialang.org/en/v1.5/base/base/index.html#Base.SimdLoop.@simd)
 
+* To *follow the compilation pipeline* and see how your Julia code is being translated into intermediate representations, and finally machine code, you can use (e.g., here for the trivial example of `1+1`)
+  * `@code_lowered 1+1`  Prints Julia SSA-form IR
+  * `@code_warntype 1+1` like `@code_lowered`, but also shows type-inference information
+  * `@code_llvm 1+1`     Prints LLVM bitcode`
+  * `@code_native 1+1`   Prints native assembly code`
+
 ## Other tips:
 * In Julia, you generally don't use `printf`. Instead you can interpolate variables into strings with `$` and use plain old `print` (or `println`), ex: "The values varied from $x to $y"
 ```julia
@@ -53,8 +59,3 @@ julia> x = 5; y = 7;
 julia> print("The values varied from $x to $y")
 The values varied from 5 to 7
 ```
-
-##### If you want to get into the real details and see how your Julia code is being implemented in terms of machine code:
-* `@code_lowered # Prints Julia SSA-form IR`
-* `@code_llvm    # Prints LLVM bitcode`
-* `@code_native  # Prints native assembly code`
