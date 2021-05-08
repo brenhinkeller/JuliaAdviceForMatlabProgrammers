@@ -84,7 +84,7 @@ There are many different ways of using Julia -- in an IDE (e.g. [Juno](https://j
       %2 = sitofp i64 %0 to double
   ; └└└└
   ;  @ promotion.jl:321 within `+' @ float.jl:326
-  %3 = fadd double %2, %1
+      %3 = fadd double %2, %1
   ;  @ promotion.jl:321 within `+'
   ret double %3
   }
@@ -99,10 +99,10 @@ There are many different ways of using Julia -- in an IDE (e.g. [Juno](https://j
   ; ││┌ @ promotion.jl:269 within `_promote'
   ; │││┌ @ number.jl:7 within `convert'
   ; ││││┌ @ float.jl:94 within `Float64'
-	vcvtsi2sd	%rdi, %xmm1, %xmm1
+        vcvtsi2sd	%rdi, %xmm1, %xmm1
   ; │└└└└
   ; │ @ promotion.jl:321 within `+' @ float.jl:326
-	vaddsd	%xmm0, %xmm1, %xmm0
+        vaddsd  	%xmm0, %xmm1, %xmm0
   ; │ @ promotion.jl:321 within `+'
 	retq
 	nopw	(%rax,%rax)
