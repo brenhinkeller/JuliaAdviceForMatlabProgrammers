@@ -46,10 +46,10 @@ There are many different ways of using Julia -- in an IDE (e.g. [Juno](https://j
   * You can [LoopVectorization.jl](https://github.com/chriselrod/LoopVectorization.jl) either on a loop with `@avx for`, or on a dot-broadcasted operation with `@avx  @.` You can only use this in cases where the iterations of the loop can be conducted in arbitrary order, since the vector registers will be running the same operations on several iterations of your loop at the same time. 
   * See also [`@simd`](https://docs.julialang.org/en/v1.5/base/base/index.html#Base.SimdLoop.@simd)
 
-* To *follow the compilation pipeline* and see how your Julia code is being translated into intermediate representations, and finally machine code, you can use (e.g., here for the trivial example of `1+1`)
+* To **_follow the compilation pipeline_** and see how your Julia code is being translated into intermediate representations, and finally machine code, you can use (e.g., here for the trivial example of `1+1`)
   * `@code_lowered`  Prints Julia SSA-form IR
   ```julia
-julia> @code_lowered 1 + 1.0
+  julia> @code_lowered 1 + 1.0
 CodeInfo(
 1 ─ %1 = Base.promote(x, y)
 │   %2 = Core._apply_iterate(Base.iterate, Base.:+, %1)
