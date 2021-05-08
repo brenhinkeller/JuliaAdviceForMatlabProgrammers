@@ -1,3 +1,6 @@
+![header image](img/JuliaForMatlabProgrammers.png)
+---
+
 # Julia Advice for MATLAB (or R or Python) programmers
 
 Here are a few things I've learned while transitioning from a mix of MATLAB and C to the [Julia](https://julialang.org) programming langage, starting around 2018. Some of this is rather straightforward, while other points may be less obvious.
