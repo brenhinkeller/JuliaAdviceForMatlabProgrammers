@@ -50,60 +50,59 @@ There are many different ways of using Julia -- in an IDE (e.g. [Juno](https://j
   * `@code_lowered`  Prints Julia SSA-form IR
   ```julia
   julia> @code_lowered 1 + 1.0
-CodeInfo(
-1 ─ %1 = Base.promote(x, y)
-│   %2 = Core._apply_iterate(Base.iterate, Base.:+, %1)
-└──      return %2
-)
+  CodeInfo(1 ─ %1 = Base.promote(x, y)
+  │   %2 = Core._apply_iterate(Base.iterate, Base.:+, %1)
+  └──      return %2
+  )
   ```
   * `@code_warntype` like `@code_lowered`, but also shows type-inference information
   ```julia
-julia> @code_warntype 1 + 1.0
-Variables
-  #self#::Core.Const(+)
-  x::Int64
-  y::Float64
-
-Body::Float64
-1 ─ %1 = Base.promote(x, y)::Tuple{Float64, Float64}
-│   %2 = Core._apply_iterate(Base.iterate, Base.:+, %1)::Float64
-└──      return %2
+  julia> @code_warntype 1 + 1.0
+  Variables
+    #self#::Core.Const(+)
+    x::Int64
+    y::Float64
+    
+  Body::Float64
+  1 ─ %1 = Base.promote(x, y)::Tuple{Float64, Float64}
+  │   %2 = Core._apply_iterate(Base.iterate, Base.:+, %1)::Float64
+  └──      return %2
   ```
   * `@code_llvm`     Prints LLVM bitcode
   ```julia
-julia> @code_llvm 1 + 1.0
-;  @ promotion.jl:321 within `+'
-define double @"julia_+_455"(i64 signext %0, double %1) {
-top:
-; ┌ @ promotion.jl:292 within `promote'
-; │┌ @ promotion.jl:269 within `_promote'
-; ││┌ @ number.jl:7 within `convert'
-; │││┌ @ float.jl:94 within `Float64'
+  julia> @code_llvm 1 + 1.0
+  ;  @ promotion.jl:321 within `+'
+  define double @"julia_+_455"(i64 signext %0, double %1) {
+  top:
+  ; ┌ @ promotion.jl:292 within `promote'
+  ; │┌ @ promotion.jl:269 within `_promote'
+  ; ││┌ @ number.jl:7 within `convert'
+  ; │││┌ @ float.jl:94 within `Float64'
       %2 = sitofp i64 %0 to double
-; └└└└
-;  @ promotion.jl:321 within `+' @ float.jl:326
+  ; └└└└
+  ;  @ promotion.jl:321 within `+' @ float.jl:326
   %3 = fadd double %2, %1
-;  @ promotion.jl:321 within `+'
+  ;  @ promotion.jl:321 within `+'
   ret double %3
-}
+  }
   ```
   * `@code_native`   Prints native assembly code
   ```julia
-julia> @code_native 1 + 1.0
+  julia> @code_native 1 + 1.0
 	.section	__TEXT,__text,regular,pure_instructions
-; ┌ @ promotion.jl:321 within `+'
-; │┌ @ promotion.jl:292 within `promote'
-; ││┌ @ promotion.jl:269 within `_promote'
-; │││┌ @ number.jl:7 within `convert'
-; ││││┌ @ float.jl:94 within `Float64'
+  ; ┌ @ promotion.jl:321 within `+'
+  ; │┌ @ promotion.jl:292 within `promote'
+  ; ││┌ @ promotion.jl:269 within `_promote'
+  ; │││┌ @ number.jl:7 within `convert'
+  ; ││││┌ @ float.jl:94 within `Float64'
 	vcvtsi2sd	%rdi, %xmm1, %xmm1
-; │└└└└
-; │ @ promotion.jl:321 within `+' @ float.jl:326
+  ; │└└└└
+  ; │ @ promotion.jl:321 within `+' @ float.jl:326
 	vaddsd	%xmm0, %xmm1, %xmm0
-; │ @ promotion.jl:321 within `+'
+  ; │ @ promotion.jl:321 within `+'
 	retq
 	nopw	(%rax,%rax)
-; └
+  ; └
   ```
 
 ## Other tips:
