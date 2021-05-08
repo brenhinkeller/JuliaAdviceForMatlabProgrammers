@@ -48,14 +48,8 @@ There are many different ways of using Julia -- in an IDE (e.g. [Juno](https://j
 
 * To **_follow the compilation pipeline_** and see how your Julia code is being translated into intermediate representations, and finally machine code, you can use (e.g., here for the trivial example of `1+1`)
   * `@code_lowered` -- Prints Julia SSA-form IR
-
-  ```julia
-  julia> @code_lowered 1 + 1.0
-  CodeInfo(1 ─ %1 = Base.promote(x, y)
-  │   %2 = Core._apply_iterate(Base.iterate, Base.:+, %1)
-  └──      return %2
-  )
-  ```
+  ![Image of code_lowered example](img/code_lowered.png)
+  
   * `@code_warntype` -- like `@code_lowered`, but also shows type-inference information
 
   ```julia
