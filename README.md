@@ -61,10 +61,13 @@ There are many different ways of using Julia -- in an IDE (e.g. [Juno](https://j
   
   * `@code_warntype` -- like `@code_lowered`, but also shows type-inference information
   ![Image of code_warntype example](img/code_warntype.png)
-  Ok, so now we can see they types of everything as well, in the colored type annotations beginning with `::`. The inputs are `x` which we are told is an `Int64`, (evidently our `1`), and `y` which is a `Float64` (our `1.0`). After applying `Base.promote_type`, the result is a tuple of two `Float64`s, in this case `(1.0, 1.0)`. Tuples are arguably one of the most fundamental constructs in Julia (thanks to its lisp-y heritage), and have lots of nice properties. Among other things, they're iterable, so the natural way to add up the contents of one is by iterating.
+  Ok, so now we can see they types of everything as well, in the colored type annotations beginning with `::`. The inputs are `x` which we are told is an `Int64`, (evidently our `1`), and `y` which is a `Float64` (our `1.0`). After applying `Base.promote_type`, the result is a tuple of two `Float64`s, in this case `(1.0, 1.0)`. Tuples are arguably one of the most fundamental constructs in Julia (thanks to its Lisp-y heritage), and have lots of nice properties. Among other things, they're [iterable](https://docs.julialang.org/en/v1/manual/interfaces/#man-interface-iteration), so the natural way to add up the contents of one is by iterating. That's what the next line here does, iteratively applying `Base.:+` over our tuple. This might seem a bit like overkill here, but you can imagine how this would generalize nicely if we had been adding more than just two things. So this is all nice and well, but our CPU can't run these Julia instructions, so let's keep going.
 
   * `@code_llvm`  --   Prints LLVM bitcode
   ![Image of code_llvm example](img/code_llvm.png)
+  The next step in Julia's compilation pipeline is to turn everything into [LLVM](https://en.wikipedia.org/wiki/Llvm) bitcode. As the LLVM project will [tell you](https://llvm.org/docs/BitCodeFormat.html)
+  > What is commonly known as the LLVM bitcode file format (also, sometimes anachronistically known as bytecode) is actually two things: a bitstream container format and an encoding of LLVM IR into the container format.
+  but for our purposes these are just instructions that LLVM will use to generate the final optimized machine code. There are three instructions here: first `sitofp`, which as the "i to f" part might tell you, is going to convert an integer to a floating point number. Then, `fadd`, which will add two floating point numbers, and finally we'll `ret`urn the result.
 
   * `@code_native` --  Prints native assembly code
   ![Image of code_native example](img/code_native.png)
