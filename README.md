@@ -23,7 +23,7 @@ There are many different ways of using Julia -- in an IDE (e.g. [Juno](https://j
 
 #### Some quick-start guides/cheatsheets:
 * A handy Matlab-Python-Julia rosetta stone: https://cheatsheets.quantecon.org/
-* The ["Noteworthy Differences from other Languages" section](https://docs.julialang.org/en/v1.5/manual/noteworthy-differences/) of the official Julia docs
+* The ["Noteworthy Differences from other Languages" section](https://docs.julialang.org/en/v1.6/manual/noteworthy-differences/) of the official Julia docs
 * "The fast track to Julia": https://juliadocs.github.io/Julia-Cheat-Sheet/
 
 ## Common 'gotcha's:
@@ -45,7 +45,7 @@ There are many different ways of using Julia -- in an IDE (e.g. [Juno](https://j
 * For more details, see the excellent articles on [Julia Antipatterns](https://www.oxinabox.net/2020/04/19/Julia-Antipatterns.html) by Lyndon White or [7 Julia Gotchas](http://www.stochasticlifestyle.com/7-julia-gotchas-handle/) by Chris Rackauckas
 
 ## Performance:
-(see also: https://docs.julialang.org/en/v1.5/manual/performance-tips/)
+(see also: https://docs.julialang.org/en/v1/manual/performance-tips/)
 * **_Loops_** are fast in Julia. It sounds simple but it was hard to really believe / to unlearn my Matlab instincts. In particular, an `@inbounds @simd for` loop doing simple arithmetic operations, array indexing, or really anything that's *type-stable*, should run at C-like or faster speeds.
   * Type-stable, non-allocating loops are just as fast as broadcasting (if not faster!)
 
@@ -56,8 +56,8 @@ There are many different ways of using Julia -- in an IDE (e.g. [Juno](https://j
 * **_Allocations_**: Allocating memory takes time, and if you have a whole lot of allocations, that makes work for the garbage collector, which take even more time. It's _very easy_ to accidentally write code that allocates when it really doesn't have to (e.g., the examples above in the "gotcha's" section about indexing on the RHS of an assignment (vs using a `view`), or about `=` vs. `.=`. Fortunately, it's very easy to check, since `@allocated`, `@time`, `@btime`/`@benchmark` can all be used to check how much memory your code allocates. Also, as it turns out, many named functions already have _in-place_ (i.e., non-allocating) versions that mutate their arguments. These should have names that end in `!`, since Julia convention is that any function which mutates its arguments must end in `!`. So for example `fill` versus `fill!`.
 
 * **_Vectorization_** is used to refer to two very different concepts in CS, both of which occur in Julia. One is a syntax thing, the other is a hardware thing. The syntax kind is what you know from Matlab (essentially what we discussed as "broadcasting" above), the hardware kind is about the amazing things you can do with your CPU's vector registers / avx extensions (basically like a mini GPU within your CPU), which you can access with [LoopVectorization.jl](https://github.com/chriselrod/LoopVectorization.jl).  
-  * You can [LoopVectorization.jl](https://github.com/chriselrod/LoopVectorization.jl) either on a loop with `@avx for`, or on a dot-broadcasted operation with `@avx  @.` You can only use this in cases where the iterations of the loop can be conducted in arbitrary order, since the vector registers will be running the same operations on several iterations of your loop at the same time.
-  * See also [`@simd`](https://docs.julialang.org/en/v1.5/base/base/index.html#Base.SimdLoop.@simd)
+  * You can [LoopVectorization.jl](https://github.com/chriselrod/LoopVectorization.jl) either on a loop with `@turbo for`, or on a dot-broadcasted operation with `@turbo  @.` You can only use this in cases where the iterations of the loop can be conducted in arbitrary order, since the vector registers will be running the same operations on several iterations of your loop at the same time.
+  * See also [`@simd`](https://docs.julialang.org/en/v1.6/base/base/index.html#Base.SimdLoop.@simd)
 
 * To **_follow the compilation pipeline_** and see how your Julia code is being translated into intermediate representations, and finally machine code, you can use several handy macros. This is something you may not be used to being able to do from Matlab or Python, but it can be quite instructive when trying to understand and optimize your code!
   * `@code_lowered` -- Prints Julia SSA-form IR
