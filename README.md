@@ -29,7 +29,7 @@ There are many different ways of using Julia -- in an IDE (e.g. [Juno](https://j
 
 ## Tooling
 
-Julia provides several debugging utilities. One that is very similar to Matlab's interactive debugger (e.g., using `keyboard` to set breakpoints) is [https://github.com/JuliaDebug/Infiltrator.jl](Infiltrator.jl), which introduces `@infiltrate` as a replacement for `keyboard`. For a debugging experience more similar to GDB, see [https://github.com/JuliaDebug/Debugger.jl](Debugger.jl).
+Julia provides several debugging utilities. One that is very similar to Matlab's interactive debugger (e.g., using `keyboard` to set breakpoints) is [Infiltrator.jl](https://github.com/JuliaDebug/Infiltrator.jl), which introduces `@infiltrate` as a replacement for `keyboard`. For a debugging experience more similar to GDB, see [Debugger.jl](https://github.com/JuliaDebug/Debugger.jl).
 
 ## Common 'gotcha's:
 * if `A` is an array, **assigning** `B = A` will copy`A` *by reference* such that both `A` and `B` point to the same memory,  i.e., if you subsequently change `A[1]`, that'll also change `B[1]`. If you don't want this, you need to make a copy, e.g. `B = copy(A)`.
