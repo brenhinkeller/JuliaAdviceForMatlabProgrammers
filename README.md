@@ -16,6 +16,7 @@ There are many different ways of using Julia -- in an IDE (e.g. [Juno](https://j
 #### At the REPL,
 * Typing `?` followed by the name of a function (or type, etc.) name will give you help/documentation on that function (or type, etc.).
   * This documentation is usually quite good, but you have to know the exact name of the thing you need. If you don't know that, try the `apropos` function to find the exact names of a few relevant things (try, for example `apropos("sparse array")`). You can also access these suggestions by entering a string rather than raw text at the `?` prompt.
+  * Julia is fast in part because it uses specialized versions of functions for different argument types. For example, sparse matrices in Julia (from the `SparseArrays.jl` package) are represented as a `SparseMatrixCSC` type, and `methodswith(SparseMatrixCSC)` shows methods which are specialized for `SparseMatrixCSC`. 
 * Typing `]` opens the package manager
 * Typing `;` gives you the system command line
 * Typing `@less` or `@edit` followed by a function call will show you the source code for that function
@@ -25,6 +26,10 @@ There are many different ways of using Julia -- in an IDE (e.g. [Juno](https://j
 * A handy Matlab-Python-Julia rosetta stone: https://cheatsheets.quantecon.org/
 * The ["Noteworthy Differences from other Languages" section](https://docs.julialang.org/en/v1.6/manual/noteworthy-differences/) of the official Julia docs
 * "The fast track to Julia": https://juliadocs.github.io/Julia-Cheat-Sheet/
+
+## Tooling
+
+Julia provides several debugging utilities. One that is very similar to Matlab's interactive debugger (e.g., using `keyboard` to set breakpoints) is [https://github.com/JuliaDebug/Infiltrator.jl](Infiltrator.jl), which introduces `@infiltrate` as a replacement for `keyboard`. For a debugging experience more similar to GDB, see [https://github.com/JuliaDebug/Debugger.jl](Debugger.jl).
 
 ## Common 'gotcha's:
 * if `A` is an array, **assigning** `B = A` will copy`A` *by reference* such that both `A` and `B` point to the same memory,  i.e., if you subsequently change `A[1]`, that'll also change `B[1]`. If you don't want this, you need to make a copy, e.g. `B = copy(A)`.
