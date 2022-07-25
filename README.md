@@ -52,8 +52,7 @@ There are many different ways of using Julia -- in an IDE (e.g. [Juno](https://j
 
 * **_Type-stability_**: Use `@code_warntype` followed by a function call to check for type-stability (anywhere it prints a red `Any` is bad). Type-stable code is, perhaps, two orders of magnitude faster than type-unstable code (though even type-unstable code may be faster than Python :p). If the `@code_warntype` output is overwhelming, start by just looking at the list of variables at top and try to make sure they're all green concrete types and not red `Any`s.
   * !However: putting restrictive type assertions on function arguments doesn't make the function faster, and is more useful for dispatch than for anything to do with type stability. Instead, type-stability is all about avoiding cases where instability is introduced in the first place, and if you can't then sanitizing any unstable things (like variables pulled from a `Dict`) with a typeassert (e.g. `x::Array{Float64,1}`) prior to using them (in fact, probably better to avoid `Dict`s altogether except perhaps for interactive use)
-  * If you want to "descend" into the functions of your code iteratively to find exactly where type-instability is coming from in the depths of some complicated package, there is the ominously-named [Cthulhu.jl](https://github.com/JuliaDebug/Cthulhu.jl) -- effectively a "type inference debugger".
-    * See also: [JETTest.jl](https://github.com/aviatesk/JETTest.jl) for a more automated approach!
+    * See also: [JET.jl](https://github.com/aviatesk/JET.jl), [Cthulhu.jl](https://github.com/JuliaDebug/Cthulhu.jl) as discussed below
 
 * **_Allocations_**: Allocating memory takes time, and if you have a whole lot of allocations, that makes work for the garbage collector, which take even more time. It's _very easy_ to accidentally write code that allocates when it really doesn't have to (e.g., the examples above in the "gotcha's" section about indexing on the RHS of an assignment (vs using a `view`), or about `=` vs. `.=`. Fortunately, it's very easy to check, since `@allocated`, `@time`, `@btime`/`@benchmark` can all be used to check how much memory your code allocates. Also, as it turns out, many named functions already have _in-place_ (i.e., non-allocating) versions that mutate their arguments. These should have names that end in `!`, since Julia convention is that any function which mutates its arguments must end in `!`. So for example `fill` versus `fill!`.
 
@@ -86,4 +85,12 @@ There are many different ways of using Julia -- in an IDE (e.g. [Juno](https://j
 
 ## Tooling
 
-Julia provides several debugging utilities. One that is very similar to Matlab's interactive debugger (e.g., using `keyboard` to set breakpoints) is [Infiltrator.jl](https://github.com/JuliaDebug/Infiltrator.jl), which introduces `@infiltrate` as a replacement for `keyboard`. Personally, I've always been more a fan of good old `println` debugging though so can't really provide too much insight on debuggers. I do use [Cthulhu.jl](https://github.com/JuliaDebug/Cthulhu.jl) quite extensively for debugging these days, though definitiely not in the manner that one typically uses a debugger.
+* Testing: the built-in testing framwork, [Test](https://docs.julialang.org/en/v1/stdlib/Test/) is relatively bare-bones but simple to use and nicely integrated with the built-in package manager [Pkg](https://docs.julialang.org/en/v1/stdlib/Pkg/). CI via Github Actions (e.g. [julia-runtest](https://github.com/julia-actions/julia-runtest)) is also pretty simple.
+
+* Package management: [Pkg](https://docs.julialang.org/en/v1/stdlib/Pkg/) is excellent and makes it trivial to set up virtual environments. 
+
+* Debugging: Julia provides several debugging utilities. One that is very similar to Matlab's interactive debugger (e.g., using `keyboard` to set breakpoints) is [Infiltrator.jl](https://github.com/JuliaDebug/Infiltrator.jl), which introduces `@infiltrate` as a replacement for `keyboard`. Personally, I've always been more a fan of good old `println` debugging though so can't really provide too much insight on debuggers. I do use [Cthulhu.jl](https://github.com/JuliaDebug/Cthulhu.jl) quite extensively for debugging these days, though I suppose not quite in the manner that one typically uses a debugger. 
+
+* Static analysis: [JET.jl](https://github.com/aviatesk/JET.jl)
+
+
