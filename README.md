@@ -27,10 +27,6 @@ There are many different ways of using Julia -- in an IDE (e.g. [Juno](https://j
 * The ["Noteworthy Differences from other Languages" section](https://docs.julialang.org/en/v1.6/manual/noteworthy-differences/) of the official Julia docs
 * "The fast track to Julia": https://juliadocs.github.io/Julia-Cheat-Sheet/
 
-## Tooling
-
-Julia provides several debugging utilities. One that is very similar to Matlab's interactive debugger (e.g., using `keyboard` to set breakpoints) is [Infiltrator.jl](https://github.com/JuliaDebug/Infiltrator.jl), which introduces `@infiltrate` as a replacement for `keyboard`. For a debugging experience more similar to GDB, see [Debugger.jl](https://github.com/JuliaDebug/Debugger.jl).
-
 ## Common 'gotcha's:
 * if `A` is an array, **assigning** `B = A` will copy`A` *by reference* such that both `A` and `B` point to the same memory,  i.e., if you subsequently change `A[1]`, that'll also change `B[1]`. If you don't want this, you need to make a copy, e.g. `B = copy(A)`.
 * Slicing an array by **indexing**, with (e.g.)  `x = a[:, 5]` or `a = x[x .> 5]`, etc., *makes a copy*. This is great if you *want* a brand new array, but can be slow if you don't. In the latter case, you can instead use a [`view`](https://docs.julialang.org/en/latest/base/arrays/#Base.view), e.g. `view(a, :, 5)`, which will be much much faster where applicable.
@@ -51,7 +47,7 @@ Julia provides several debugging utilities. One that is very similar to Matlab's
 
 ## Performance:
 (see also: https://docs.julialang.org/en/v1/manual/performance-tips/)
-* **_Loops_** are fast in Julia. It sounds simple but it was hard to really believe / to unlearn my Matlab instincts. In particular, an `@inbounds @simd for` loop doing simple arithmetic operations, array indexing, or really anything that's *type-stable*, should run at C-like or faster speeds.
+* **_Loops_** are fast in Julia. It sounds simple but it was hard to really believe / to unlearn my Matlab instincts. In particular, an `@inbounds for` loop doing simple arithmetic operations, array indexing, or really anything that's *type-stable*, should run at C-like speeds.
   * Type-stable, non-allocating loops are just as fast as broadcasting (if not faster!)
 
 * **_Type-stability_**: Use `@code_warntype` followed by a function call to check for type-stability (anywhere it prints a red `Any` is bad). Type-stable code is, perhaps, two orders of magnitude faster than type-unstable code (though even type-unstable code may be faster than Python :p). If the `@code_warntype` output is overwhelming, start by just looking at the list of variables at top and try to make sure they're all green concrete types and not red `Any`s.
@@ -61,9 +57,9 @@ Julia provides several debugging utilities. One that is very similar to Matlab's
 
 * **_Allocations_**: Allocating memory takes time, and if you have a whole lot of allocations, that makes work for the garbage collector, which take even more time. It's _very easy_ to accidentally write code that allocates when it really doesn't have to (e.g., the examples above in the "gotcha's" section about indexing on the RHS of an assignment (vs using a `view`), or about `=` vs. `.=`. Fortunately, it's very easy to check, since `@allocated`, `@time`, `@btime`/`@benchmark` can all be used to check how much memory your code allocates. Also, as it turns out, many named functions already have _in-place_ (i.e., non-allocating) versions that mutate their arguments. These should have names that end in `!`, since Julia convention is that any function which mutates its arguments must end in `!`. So for example `fill` versus `fill!`.
 
-* **_Vectorization_** is used to refer to two very different concepts in CS, both of which occur in Julia. One is a syntax thing, the other is a hardware thing. The syntax kind is what you know from Matlab (essentially what we discussed as "broadcasting" above), the hardware kind is about the amazing things you can do with your CPU's vector registers / avx extensions (basically like a mini GPU within your CPU), which you can access with [LoopVectorization.jl](https://github.com/chriselrod/LoopVectorization.jl).  
-  * You can use [LoopVectorization.jl](https://github.com/chriselrod/LoopVectorization.jl) either on a loop with `@turbo for`, or on a dot-broadcasted operation with `@turbo  @.` You can only use this in cases where the iterations of the loop can be conducted in arbitrary order, since the vector registers will be running the same operations on several iterations of your loop at the same time.
-  * See also [`@simd`](https://docs.julialang.org/en/v1.6/base/base/index.html#Base.SimdLoop.@simd)
+* **_Vectorization_** is used to refer to two very different concepts in CS, both of which occur in Julia. One is a syntax thing, the other is a hardware thing. The syntax kind is what you know from Matlab (essentially what we discussed as "broadcasting" above), the hardware kind is about the amazing things you can do with your CPU's vector registers / avx extensions (basically like a mini GPU within your CPU), which you can access with [LoopVectorization.jl](https://github.com/JuliaSIMD/LoopVectorization.jl).  
+  * You can use [LoopVectorization.jl](https://github.com/JuliaSIMD/LoopVectorization.jl) either on a loop with `@turbo for`, or on a dot-broadcasted operation with `@turbo  @.` You can only use this in cases where the iterations of the loop can be conducted in arbitrary order, since the vector registers will be running the same operations on several iterations of your loop at the same time.
+  * See also [`@simd`](https://docs.julialang.org/en/v1/base/base/index.html#Base.SimdLoop.@simd), though `@turbo` is generally faster when applicable
 
 * To **_follow the compilation pipeline_** and see how your Julia code is being translated into intermediate representations, and finally machine code, you can use several handy macros. This is something you may not be used to being able to do from Matlab or Python, but it can be quite instructive when trying to understand and optimize your code!
   * `@code_lowered` -- Prints Julia SSA-form IR
@@ -76,10 +72,7 @@ Julia provides several debugging utilities. One that is very similar to Matlab's
 
   * `@code_llvm`  --   Prints LLVM bitcode
   ![Image of code_llvm example](img/code_llvm.png)
-  The next step in Julia's compilation pipeline is to turn everything into [LLVM](https://en.wikipedia.org/wiki/Llvm) bitcode. As the LLVM project will [tell you](https://llvm.org/docs/BitCodeFormat.html)
-    > What is commonly known as the LLVM bitcode file format (also, sometimes anachronistically known as bytecode) is actually two things: a bitstream container format and an encoding of LLVM IR into the container format.
-
-    but for our purposes these are just instructions that LLVM will use to generate the final optimized machine code. There are three instructions here: first `sitofp`, which as the "i to f" part might tell you, is going to convert an integer to a floating point number. Then, `fadd`, which will add two floating point numbers, and finally we'll `ret`urn the result.
+  The next step in Julia's compilation pipeline is to turn everything into [LLVM](https://en.wikipedia.org/wiki/Llvm) IR, which LLVM will use to generate the final optimized machine code. There are three instructions here: first `sitofp`, which as the "i to f" part might tell you, is going to convert an integer to a floating point number. Then, `fadd`, which will add two floating point numbers, and finally we'll `ret`urn the result.
 
   * `@code_native` --  Prints native assembly code
   ![Image of code_native example](img/code_native.png)
@@ -88,3 +81,9 @@ Julia provides several debugging utilities. One that is very similar to Matlab's
     One thing you might notice, if you're used to reading x86 assembly, from the `v` in front of the instructions, and the `x` in the register names, is that this is vectorized code. This isn't doing much for us in this case since we're only adding one pair of numbers, but this is a hint that we could actually add several numbers at once with only a single one of these `vadd` instructions, e.g.:
   ![Image of code_native tuple example](img/code_native_tuple.png)
   Julia's compilation pipleine isn't bad at vectorizing things like this, but won't catch everything; and for everything else there's LoopVectorization.jl.
+
+* `@descend` from [Cthulhu.jl](https://github.com/JuliaDebug/Cthulhu.jl) -- don't let the name scare you off; it's basically just an interactive version of the above three, that lets you switch between representations and interactively walk down (and back up) into the other functions inside your function.
+
+## Tooling
+
+Julia provides several debugging utilities. One that is very similar to Matlab's interactive debugger (e.g., using `keyboard` to set breakpoints) is [Infiltrator.jl](https://github.com/JuliaDebug/Infiltrator.jl), which introduces `@infiltrate` as a replacement for `keyboard`. Personally, I've always been more a fan of good old `println` debugging though so can't really provide too much insight on debuggers. I do use [Cthulhu.jl](https://github.com/JuliaDebug/Cthulhu.jl) quite extensively for debugging these days, though definitiely not in the manner that one typically uses a debugger.
